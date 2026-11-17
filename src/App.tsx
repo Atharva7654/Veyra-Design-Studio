@@ -25,8 +25,8 @@ const assets = {
   basketball: "/media/blog-1.jpg",
   featureDesert: "/media/feature-desert.jpg",
   water: "/media/water-texture.jpg",
-  portrait: "/media/avatar-henrik.jpg",
-  portraitSquare: "/media/avatar-henrik.jpg",
+  portrait: "/media/carolina.jpg",
+  portraitSquare: "/media/carolina.jpg",
   leatherTote: "/media/work-kolch.jpg",
   elegant: "/media/author-woman1.jpg",
   winter: "/media/winter.jpg",
@@ -233,8 +233,8 @@ function LazyVideo({
       ([entry]) => {
         if (entry.isIntersecting) {
           setInView(true);
-          video.play().catch(() => {});
         } else {
+          setInView(false);
           video.pause();
         }
       },
@@ -245,15 +245,22 @@ function LazyVideo({
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !inView) return;
+    video.play().catch(() => {});
+  }, [inView]);
+
   return (
     <video
       ref={videoRef}
-      src={inView ? src : undefined}
+      src={src}
       poster={poster}
+      autoPlay
       loop
       muted
       playsInline
-      preload="none"
+      preload="auto"
       className={className}
     />
   );
